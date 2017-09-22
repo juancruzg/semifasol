@@ -1,0 +1,19 @@
+{
+  "name": "semifasol",
+  "version": "1.0.0",
+  "description": "Semifasol is a social network fdedicated to musicians",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Grasso, Juan Cruz",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31"
+  }
+}
