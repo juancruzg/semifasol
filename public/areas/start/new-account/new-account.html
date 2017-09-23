@@ -1,0 +1,45 @@
+<div layout-gt-xs="row">
+    <md-input-container class="md-block" flex-gt-xs>
+      <label>First name</label>
+      <input ng-model="vm.name">
+    </md-input-container>
+
+    <md-input-container flex-gt-xs class="md-block">
+      <label>Last name</label>
+      <input type="text">
+    </md-input-container>
+  </div>
+
+  <div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+      <label>Email</label>
+      <input ng-model="vm.email" type="email">
+    </md-input-container>
+  </div>
+  <div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+      <label>Username</label>
+      <input ng-model="vm.username" type="text">
+    </md-input-container>
+  </div>
+  <div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+      <label>Password</label>
+      <input ng-model="vm.password" type="password">
+    </md-input-container>
+  </div>
+  <div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+      <label>Repeat password</label>
+      <input ng-model="vm.repeatPassword" type="password">
+    </md-input-container>
+  </div>
+</div>
+<div layout="row" flex>
+  <md-button flex="20" class="md-raised md-primary">
+    Create
+  </md-button>
+  <md-button flex class="md-primary" target="_blank" ng-click="vm.toLogin()">
+    I do already have an account
+  </md-button>
+</div>

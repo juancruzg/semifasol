@@ -1,20 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="semifasol">
   <head>
     <meta charset="utf-8">
     <title>Semifasol</title>
     <link rel="stylesheet" href="app.css">
     <!-- Libs -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="lib/angular-material/angular-material.min.css">
   </head>
-  <body>
-    <p>Hola</p>
+  <body ng-cloak ng-controller="semifasolController as vm" layout="column">
+    <md-toolbar layout="row">
+      <div class="md-toolbar-tools">
+        <!--md-button class="md-icon-button" aria-label="Settings">
+          <md-icon>menu</md-icon>
+        </md-button-->
+        <h2 md-truncate flex>Semifasol</h2>
+      </div>
+    </md-toolbar>
+    <md-content flex layout="row">
+      <ui-view flex layout="row"></ui-view>
+    </md-content>
   </body>
   <!-- Libs -->
   <script src="lib/angular/angular.min.js" charset="utf-8"></script>
+  <script src="lib/ui-router/angular-ui-router.min.js" charset="utf-8"></script>
   <script src="lib/angular/angular-animate.min.js" charset="utf-8"></script>
   <script src="lib/angular/angular-aria.min.js" charset="utf-8"></script>
   <script src="lib/angular-material/angular-material.min.js" charset="utf-8"></script>
 
   <script src="app.js" charset="utf-8"></script>
+
+  <!-- Contrololers -->
+  <script src="areas/dashboard/dashboard.controller.js" charset="utf-8"></script>
+  <script src="areas/start/start.controller.js" charset="utf-8"></script>
+  <script src="areas/start/login/login.controller.js" charset="utf-8"></script>
+  <script src="areas/start/new-account/new-account.controller.js" charset="utf-8"></script>
+
 </html>
