@@ -43,6 +43,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state(newAccount);
 });
 
+app.run(['$transitions', '$login', '$state', function($transitions, $usuario, $state) {
+	$transitions.onBefore({}, function(tran) {
+		return $login.authorize(tran.$to().name).catch(function(target) {
+			return $state.target(target);
+		});
+	});
+}])
+
 app.controller("semifasolController", function($scope) {
 
 });
