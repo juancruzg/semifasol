@@ -1,136 +1,60 @@
 const UserData = require("./user.data.js");
-const ObjectId = require("mongoose").Types.ObjectId;
+const BaseController = require("./../base/base.controller.js");
+const User = require("./user.model.js");
+const Relationship = require("./../relationship/relationship.model.js");
 
-module.exports = class UserController {
+module.exports = class UserController extends BaseController {
   constructor() {
+    super();
     this.data = new UserData();
   }
 
   insertUser(req, res) {
-    let user = req.body.user;
+    let user = new UserModel(req.body.user);
+
     if (user) {
-      this.data.insertUser(user).then(user => {
-        let response = { "user": user };
-
-        res.json(response);
-      });
-    }
-  }
-
-  updateUser(req, res) {
-    let user = req.body.user;
-
-    this.data.updateUser(req.body.user).then(record => {
-      let response = { "oldRecord": record };
-
-      res.json(response);
-    });
-  }
-
-  addRelationship(req, res) {
-    let idFrom = req.params.from;
-    let idTo = req.params.to;
-
-    let promiseFrom;
-    let promiseTo;
-
-    if (idFrom && idTo) {
-      this.data.getUser({ "_id": idFrom }).then(userFrom => {
-        this.data.getUser({ "_id": idTo }).then(userTo => {
-          userFrom.relationships.push(new ObjectId(userTo._id));
-          userTo.relationships.push(new ObjectId(userFrom._id));
-
-          promiseFrom = this.data.updateUser(userFrom);
-          promiseTo = this.data.updateUser(userTo);
-
-          promiseFrom.then(userFrom => {
-            console.log(userFrom);
-            promiseTo.then(userTo => {
-              res.json({ "userFrom": userFrom, "userTo": userTo });
-            });
-          });
+      user.validateInsert().then(() => {
+        this.data.insertUser(user).then(user => {
+          if (user)
+            super.respondSuccess(res, { "user": user });
+          else
+            super.respondNotFound(res);
+        }).catch(err => {
+          super.respondInternalServerError(res, err);
         });
-      });
-    }
-    else {
-      let userFrom = req.body.userFrom;
-      let userTo = req.body.userTo;
-
-      userFrom.relationships.push(new ObjectId(userTo._id));
-      userTo.relationships.push(new ObjectId(userFrom._id));
-
-      promiseFrom = this.data.updateUser(userFrom);
-      promiseTo = this.data.updateUser(userTo);
-
-      promiseFrom.then(userFrom => {
-        console.log(userFrom);
-        promiseTo.then(userTo => {
-          res.json({ "userFrom": userFrom, "userTo": userTo });
-        });
+      }).catch(sr => {
+        super.respondInternalServerError(res, sr);
       });
     }
   }
 
-  getUser(req, res) {
-    const query = { "username": req.params.username };
-
-    // Validations
-    this.data.getUser(query).then(user => {
-      let response = { "user": user };
-
-      res.json(response);
-    }).catch(() => {
-      res.json({ "error": "Not found" })
+  listUsers(req, res) {
+    this.data.findAllUsers().then(users => {
+      if (users && users.length && users.length != 0)
+        super.respondSuccess(res, { "users": users });
+      else
+        super.respondNotFound(res);
+    }).catch(err => {
+      super.respondInternalServerError(res, err)
     });
   }
 
-  getAll(req, res) {
-    this.data.getUsers().then(users => {
-      let response = { "users": users };
+  addNewFriend(req, res) {
+    let rel = {};
+    rel.userFrom = req.params.from;
+    rel.userTo = req.params.to;
+    rel.relationshipType = "friendship";
 
-      res.json(response);
-    });
-  }
+    let relationship = new RelationshipModel(rel);
 
-  getSome(req, res) {
-    let query = req.query;
-
-    this.data.query(query).then(users => {
-      let response = { "users": users };
-
-      res.json(response);
-    });
-  }
-
-  session(req, res) {
-    let user;
-
-    if (req.session.user)
-      user = req.session.user;
-    else
-      user = null;
-
-    let response = { "user": user }
-
-    res.json(response);
-  }
-
-  login(req, res) {
-    let username = req.body.username;
-    let password = req.body.password;
-
-    const query = {
-      "username": username,
-      "password": password
-    };
-
-    this.data.getUser(query).then(user => {
+    // relationship.validateInsert().then(sr => {}).catch(sr => {});
+    this.data.addRelationship(relationship).then(user => {
       if (user)
-        req.session.user = user;
-
-      let response = { "user": user }
-
-      res.json(response);
+        super.respondSuccess(res, { "user": user });
+      else
+        super.respondNotFound(res);
+    }).catch(err => {
+      super.respondInternalServerError(res, err);
     });
   }
 }
